@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
-import Image from "next/image";
 import { WalletButton } from "@/components/WalletButton";
 import { TabNavigation, FaucetButton } from "@/components/TabNavigation";
 import { Toaster } from "react-hot-toast";

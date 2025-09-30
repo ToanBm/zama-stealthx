@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type TabType = "faucet" | "confidential-token";
-type ConfidentialSubTabType = "mint" | "sent" | "deploy";
+type ConfidentialSubTabType = "mint" | "burn" | "transfer" | "sent" | "deploy";
 
 interface TabContextType {
   activeTab: TabType;

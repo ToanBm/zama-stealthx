@@ -7,13 +7,13 @@ import { ConfidentialToken } from "@/components/ConfidentialToken";
 import { Faucet } from "@/components/Faucet";
 
 export default function Home() {
-  const { activeTab, setActiveTab } = useTab();
-  const { storage: fhevmDecryptionSignatureStorage } = useInMemoryStorage();
+  const { activeTab, setActiveTab } = useTab(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const { storage: fhevmDecryptionSignatureStorage } = useInMemoryStorage(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
-    instance: fhevmInstance,
-    ethersSigner,
-    ethersReadonlyProvider,
-    chainId,
+    instance: fhevmInstance, // eslint-disable-line @typescript-eslint/no-unused-vars
+    ethersSigner, // eslint-disable-line @typescript-eslint/no-unused-vars
+    ethersReadonlyProvider, // eslint-disable-line @typescript-eslint/no-unused-vars
+    chainId, // eslint-disable-line @typescript-eslint/no-unused-vars
   } = useFhevmContext();
 
   return (

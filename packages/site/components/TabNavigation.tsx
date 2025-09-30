@@ -186,7 +186,7 @@ export const TabNavigation = () => {
 };
 
 export const FaucetButton = () => {
-  const { activeTab, setActiveTab } = useTab();
+  const { activeTab, setActiveTab } = useTab(); // eslint-disable-line @typescript-eslint/no-unused-vars
   
   return (
     <button

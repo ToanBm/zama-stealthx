@@ -19,11 +19,11 @@ export const ConfidentialToken: React.FC = () => {
   const {
     isLoading,
     error,
-    mintConfidential,
+    mintConfidential, // eslint-disable-line @typescript-eslint/no-unused-vars
     burnConfidential,
-    batchMintConfidential,
+    batchMintConfidential, // eslint-disable-line @typescript-eslint/no-unused-vars
     batchTransferConfidential,
-    faucet,
+    faucet, // eslint-disable-line @typescript-eslint/no-unused-vars
     getConfidentialBalance,
     allowSelfBalanceDecrypt
   } = useMyConfidentialToken();
@@ -47,7 +47,7 @@ export const ConfidentialToken: React.FC = () => {
       setDisplayMintAmount(formatNumber(value));
     }
   };
-  const [burnTo, setBurnTo] = useState('');
+  const [burnTo, setBurnTo] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [burnAmount, setBurnAmount] = useState('50');
   const [displayBurnAmount, setDisplayBurnAmount] = useState('50');
 
@@ -71,7 +71,7 @@ export const ConfidentialToken: React.FC = () => {
       setDisplayTransferAmount(formatNumber(value));
     }
   };
-  const [faucetAmount, setFaucetAmount] = useState('1000');
+  const [faucetAmount, setFaucetAmount] = useState('1000'); // eslint-disable-line @typescript-eslint/no-unused-vars
   
   // Batch transfer states
   const [batchRecipients, setBatchRecipients] = useState('');
@@ -84,7 +84,7 @@ export const ConfidentialToken: React.FC = () => {
   const [decryptedBalance, setDecryptedBalance] = useState<string | null>(null);
   
   // Token info states
-  const [tokenName, setTokenName] = useState('zBTC');
+  const [tokenName, setTokenName] = useState('zBTC'); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [tokenSymbol, setTokenSymbol] = useState('zBTC');
   const [tokenDecimals, setTokenDecimals] = useState(18);
   const [selectedToken, setSelectedToken] = useState('zBTC');
@@ -92,8 +92,8 @@ export const ConfidentialToken: React.FC = () => {
   const tokenDropdownRef = useRef<HTMLDivElement>(null);
 
   // Balance states (for other tabs)
-  const [selectedBalanceToken, setSelectedBalanceToken] = useState('zBTC');
-  const [isBalanceTokenDropdownOpen, setIsBalanceTokenDropdownOpen] = useState(false);
+  const [selectedBalanceToken, setSelectedBalanceToken] = useState('zBTC'); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [isBalanceTokenDropdownOpen, setIsBalanceTokenDropdownOpen] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const balanceTokenDropdownRef = useRef<HTMLDivElement>(null);
 
   
@@ -109,7 +109,7 @@ export const ConfidentialToken: React.FC = () => {
   // Deploy contract states
   const [contractName, setContractName] = useState('');
   const [contractSymbol, setContractSymbol] = useState('');
-  const [contractDecimals, setContractDecimals] = useState('18');
+  const [contractDecimals, setContractDecimals] = useState('18'); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [initialSupply, setInitialSupply] = useState('');
   
   // Function to format number with commas
@@ -134,24 +134,12 @@ export const ConfidentialToken: React.FC = () => {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('deployedContracts', JSON.stringify(contracts));
-      } catch (error) {
+      } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
         // Error saving deployed contracts
       }
     }
   };
 
-  const loadDeployedContracts = (): typeof deployedContracts => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('deployedContracts');
-        return saved ? JSON.parse(saved) : [];
-      } catch (error) {
-        // Error loading deployed contracts
-        return [];
-      }
-    }
-    return [];
-  };
 
   // Available tokens list - từ TokenRegistry + deployed contracts
   const [availableTokens, setAvailableTokens] = useState<Array<{
@@ -169,6 +157,16 @@ export const ConfidentialToken: React.FC = () => {
   // Load deployed contracts on component mount (client-side only)
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const loadDeployedContracts = (): typeof deployedContracts => {
+        try {
+          const saved = localStorage.getItem('deployedContracts');
+          return saved ? JSON.parse(saved) : [];
+        } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
+          // Error loading deployed contracts
+          return [];
+        }
+      };
+      
       const savedContracts = loadDeployedContracts();
       setDeployedContracts(savedContracts);
     }
@@ -200,7 +198,7 @@ export const ConfidentialToken: React.FC = () => {
         // Load deployed tokens from localStorage
         const deployedTokens = JSON.parse(localStorage.getItem('deployedContracts') || '[]');
         
-        const deployedTokenOptions = deployedTokens.map((contract: any) => ({
+        const deployedTokenOptions = deployedTokens.map((contract: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
           symbol: contract.symbol,
           name: contract.name,
           icon: '🪙', // Default icon for deployed tokens
@@ -239,7 +237,7 @@ export const ConfidentialToken: React.FC = () => {
   };
 
   // Function to get token info from contract
-  const getTokenContractInfo = async () => {
+  const getTokenContractInfo = async () => { // eslint-disable-line @typescript-eslint/no-unused-vars
     if (!ethersReadonlyProvider) return;
     
     try {
@@ -279,14 +277,14 @@ export const ConfidentialToken: React.FC = () => {
         return prev;
       });
       
-    } catch (error) {
+    } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
       // Error fetching token info
     }
   };
 
   // Load token info when component mounts
   useEffect(() => {
-    getTokenInfo();
+    getTokenInfo('zBTC');
   }, [ethersReadonlyProvider]);
 
 
@@ -435,7 +433,7 @@ export const ConfidentialToken: React.FC = () => {
   };
 
 
-  const handleBatchBurn = async () => {
+  const handleBatchBurn = async () => { // eslint-disable-line @typescript-eslint/no-unused-vars
     const recipients = batchRecipients.split(',').map(addr => addr.trim()).filter(Boolean);
     const amounts = batchAmounts.split(',').map(amt => amt.trim()).filter(Boolean);
     
@@ -465,7 +463,7 @@ export const ConfidentialToken: React.FC = () => {
     }
 
     try {
-      await batchTransferConfidential(recipients, amounts.map(amt => BigInt(amt)), selectedBalanceToken);
+      await batchTransferConfidential(recipients, amounts.map(amt => BigInt(amt)));
       alert('✅ Batch transfer successful!');
     } catch (err) {
       alert(`❌ Batch transfer failed: ${err}`);
@@ -479,7 +477,7 @@ export const ConfidentialToken: React.FC = () => {
     }
 
     try {
-      const balance = await getConfidentialBalance(balanceAccount, selectedBalanceToken);
+      const balance = await getConfidentialBalance(balanceAccount);
       setConfidentialBalance(balance);
       setHasBalance(!!balance);
       setDecryptedBalance(null);
@@ -495,7 +493,7 @@ export const ConfidentialToken: React.FC = () => {
     }
 
     try {
-      await allowSelfBalanceDecrypt(balanceAccount, selectedBalanceToken);
+      await allowSelfBalanceDecrypt();
       alert('✅ Decrypt permission granted');
     } catch (err) {
       alert(`❌ Failed to allow decrypt: ${err}`);
@@ -600,7 +598,7 @@ export const ConfidentialToken: React.FC = () => {
     );
   }
 
-  const getTabTitle = () => {
+  const getTabTitle = () => { // eslint-disable-line @typescript-eslint/no-unused-vars
     switch (confidentialSubTab) {
       case "mint": return "Mint";
       case "sent": return "Sent";
@@ -648,7 +646,7 @@ export const ConfidentialToken: React.FC = () => {
           {mintSubTab === 'mint' && (
             <>
               {/* Check Balance */}
-              <Balance availableTokens={availableTokens} isLoading={isLoading} />
+              <Balance isLoading={isLoading} />
 
               {/* Single Mint */}
               <div className="rounded-xl p-4 bg-primary border border-custom">
@@ -748,7 +746,7 @@ export const ConfidentialToken: React.FC = () => {
           {mintSubTab === 'burn' && (
             <>
               {/* Check Balance */}
-              <Balance availableTokens={availableTokens} isLoading={isLoading} />
+              <Balance isLoading={isLoading} />
 
               {/* Burn Tokens */}
               <div className="rounded-xl p-4 bg-primary border border-custom">
@@ -850,7 +848,7 @@ export const ConfidentialToken: React.FC = () => {
       {confidentialSubTab === "burn" && (
         <div className="space-y-6 max-w-[800px] mx-auto">
           {/* Check Balance */}
-          <Balance availableTokens={availableTokens} isLoading={isLoading} />
+          <Balance isLoading={isLoading} />
 
           {/* Burn Tokens - Ở dưới */}
           <div className="border rounded-xl p-4">
@@ -1093,7 +1091,7 @@ export const ConfidentialToken: React.FC = () => {
           </div>
 
           {/* Check Balance */}
-          <Balance availableTokens={availableTokens} isLoading={isLoading} />
+          <Balance isLoading={isLoading} />
 
           {/* Transfer Tokens - Single Transfer */}
           {sentSubTab === 'transfer' && (

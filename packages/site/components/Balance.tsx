@@ -32,7 +32,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
   const [selectedBalanceToken, setSelectedBalanceToken] = useState('zBTC');
   const [isBalanceTokenDropdownOpen, setIsBalanceTokenDropdownOpen] = useState(false);
   const balanceTokenDropdownRef = useRef<HTMLDivElement>(null);
-  const [confidentialBalance, setConfidentialBalance] = useState<any>(null);
+  const [confidentialBalance, setConfidentialBalance] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [hasBalance, setHasBalance] = useState<boolean>(false);
   const [decryptedBalance, setDecryptedBalance] = useState<string | null>(null);
   const [isFetchingBalance, setIsFetchingBalance] = useState<boolean>(false);
@@ -92,7 +92,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
     
     try {
       let contractAddress: string;
-      let abi: any;
+      let abi: any; // eslint-disable-line @typescript-eslint/no-explicit-any
       
       // Chọn contract và ABI dựa trên token được chọn
       const selectedToken = availableTokens.find(t => t.symbol === selectedBalanceToken);
@@ -138,7 +138,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
       
       success(`${selectedBalanceToken} balance retrieved and decrypt allowed!`);
       
-    } catch (err) {
+    } catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
       error(`❌ Failed to fetch ${selectedBalanceToken} balance`);
       setIsDecryptAllowed(false);
     } finally {
@@ -182,7 +182,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
         durationDays
       );
       
-      const signature = await (ethersSigner as any).signTypedData(
+      const signature = await (ethersSigner as any).signTypedData( // eslint-disable-line @typescript-eslint/no-explicit-any
         eip712.domain,
         { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
         eip712.message
@@ -210,7 +210,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
       setDecryptedBalance(formattedBalance);
       success(`🔓 Decrypted: ${formattedBalance} ${selectedBalanceToken}`);
       
-    } catch (err) {
+    } catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
       error(`❌ Decryption failed`);
     }
   };

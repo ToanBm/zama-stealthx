@@ -286,7 +286,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
 
       console.log('Checking balance for account:', account);
       console.log('Contract address:', contractAddress);
-      console.log('Contract methods:', Object.keys(contract.interface.functions));
+      console.log('Contract methods:', Object.keys(contract.interface.fragments));
       
       // Check if account is valid
       if (!account || account === '0x0000000000000000000000000000000000000000') {
@@ -294,7 +294,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
       }
       
       // Try direct call instead of estimateGas
-      const balance = await contract.callStatic.confidentialBalanceOf(account);
+      const balance = await contract.getFunction('confidentialBalanceOf')(account);
       console.log('Balance result:', balance);
       return balance;
     } catch (err) {

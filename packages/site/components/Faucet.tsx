@@ -16,7 +16,7 @@ import Image from 'next/image';
  */
 export const Faucet = () => {
   const [mounted, setMounted] = useState(false);
-  const [, setMessage] = useState<string>("");
+  const [, setMessage] = useState<string>(""); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { storage: fhevmDecryptionSignatureStorage } = useInMemoryStorage();
   
   
@@ -31,7 +31,7 @@ export const Faucet = () => {
     ethersReadonlyProvider,
   } = useFhevmContext();
   
-  const { address } = useAccount();
+  const { address } = useAccount(); // eslint-disable-line @typescript-eslint/no-unused-vars
 
 
   //////////////////////////////////////////////////////////////////////////////

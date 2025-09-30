@@ -40,7 +40,7 @@ export const WalletButton = () => {
     if (isConnected && chainId && chainId !== sepolia.id && switchChain) {
       try {
         switchChain({ chainId: sepolia.id });
-      } catch (error) {
+      } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
         // Failed to auto switch to Sepolia
       }
     }
