@@ -114,9 +114,21 @@ export const ConfidentialToken: React.FC = () => {
   
   // Function to format number with commas
   const formatNumberWithCommas = (value: string) => {
-    const number = value.replace(/,/g, '');
-    if (isNaN(Number(number))) return value;
-    return Number(number).toLocaleString();
+    // Remove all commas first
+    const cleanValue = value.replace(/,/g, '');
+    
+    // If empty, return empty
+    if (cleanValue === '') return '';
+    
+    // If not a valid number, return the original value
+    if (isNaN(Number(cleanValue))) return value;
+    
+    // Convert to number and format with commas
+    const num = Number(cleanValue);
+    if (num < 0) return value; // Don't allow negative numbers
+    
+    // Simple formatting without toLocaleString to avoid Vercel issues
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
   
   // State for deployed contracts
@@ -911,11 +923,10 @@ export const ConfidentialToken: React.FC = () => {
                 {/* Amount Input */}
                 <div className="w-[20%] text-right ml-auto">
                   <input
-                    type="number"
+                    type="text"
                     value={burnAmount}
                     onChange={(e) => setBurnAmount(e.target.value)}
                     placeholder={`0.${'0'.repeat(tokenDecimals - 1)}1`}
-                    step={`0.${'0'.repeat(tokenDecimals - 1)}1`}
                     className="w-full p-2 border rounded text-right"
                   />
                 </div>
@@ -956,7 +967,7 @@ export const ConfidentialToken: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium mb-1">Amount:</label>
                   <input
-                    type="number"
+                    type="text"
                     value={transferAmount}
                     onChange={(e) => setTransferAmount(e.target.value)}
                     placeholder="50"
@@ -1032,8 +1043,8 @@ export const ConfidentialToken: React.FC = () => {
           {/* Batch Transfer */}
           <div className="border rounded-xl p-4">
             <h3 className="text-lg font-semibold mb-3">Batch Transfer</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+            <div className="flex gap-4">
+              <div className="w-[60%]">confidential
                 <label className="block text-sm font-medium mb-1">Recipients:</label>
                 <textarea
                   value={batchRecipients}
@@ -1042,7 +1053,7 @@ export const ConfidentialToken: React.FC = () => {
                   className="w-full p-2 border rounded h-20"
                 />
               </div>
-              <div>
+              <div className="w-[40%]">
                 <label className="block text-sm font-medium mb-1">Amounts:</label>
                 <textarea
                   value={batchAmounts}
@@ -1136,8 +1147,8 @@ export const ConfidentialToken: React.FC = () => {
           {sentSubTab === 'batch-transfer' && (
             <div className="rounded-xl p-4 bg-primary border border-custom">
               <h3 className="text-lg font-semibold mb-3 text-white">Batch Transfer</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+              <div className="flex gap-4">
+                <div className="w-[60%]">
                   <label className="block text-sm font-medium mb-1 text-white">Recipients:</label>
                   <textarea
                     value={batchRecipients}
@@ -1146,7 +1157,7 @@ export const ConfidentialToken: React.FC = () => {
                     className="w-full p-2 font-bold text-white bg-tertiary border-none outline-none focus:outline-none rounded h-20 text-base"
                   />
                 </div>
-                <div>
+                <div className="w-[40%]">
                   <label className="block text-sm font-medium mb-1 text-white">Amounts:</label>
                   <textarea
                     value={batchAmounts}
