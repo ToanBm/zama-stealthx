@@ -1184,14 +1184,10 @@ export const ConfidentialToken: React.FC = () => {
               Manual
             </button>
             <button
-              onClick={() => setDeploySubTab('auto')}
-              className={`px-6 py-2 font-bold transition-colors text-white text-sm ${
-                deploySubTab === 'auto'
-                  ? 'btn-primary'
-                  : 'btn-inactive text-gray-300'
-              }`}
+              disabled
+              className="px-6 py-2 font-bold transition-colors text-white text-sm btn-inactive text-gray-300 cursor-not-allowed opacity-50"
             >
-              Auto
+              Auto (soon)
             </button>
           </div>
 
