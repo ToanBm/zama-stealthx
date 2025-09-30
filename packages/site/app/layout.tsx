@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   description: "StealthX is a confidential token platform built on FHEVM, enabling private transactions and confidential smart contracts on Ethereum.",
   keywords: "confidential tokens, FHEVM, privacy, blockchain, Ethereum, StealthX",
   authors: [{ name: "StealthX Team" }],
+  icons: {
+    icon: "/stealthx-logo.jpeg",
+    shortcut: "/stealthx-logo.jpeg",
+    apple: "/stealthx-logo.jpeg",
+  },
   openGraph: {
     title: "StealthX - Confidential Token Platform",
     description: "StealthX is a confidential token platform built on FHEVM, enabling private transactions and confidential smart contracts on Ethereum.",
