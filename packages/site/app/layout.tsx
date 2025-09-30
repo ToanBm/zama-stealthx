@@ -12,8 +12,15 @@ const chakraPetch = Chakra_Petch({
 });
 
 export const metadata: Metadata = {
-  title: "Zama FHEVM SDK Quickstart",
-  description: "Zama FHEVM SDK Quickstart app",
+  title: "StealthX - Confidential Token Platform",
+  description: "StealthX is a confidential token platform built on FHEVM, enabling private transactions and confidential smart contracts on Ethereum.",
+  keywords: "confidential tokens, FHEVM, privacy, blockchain, Ethereum, StealthX",
+  authors: [{ name: "StealthX Team" }],
+  openGraph: {
+    title: "StealthX - Confidential Token Platform",
+    description: "StealthX is a confidential token platform built on FHEVM, enabling private transactions and confidential smart contracts on Ethereum.",
+    type: "website",
+  },
 };
 
 export default async function RootLayout({
