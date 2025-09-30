@@ -31,12 +31,6 @@ export const ConfidentialToken: React.FC = () => {
   // Form states
   const [mintAmount, setMintAmount] = useState('');
 
-  // Format number with commas
-  const formatNumber = (value: string) => {
-    const number = value.replace(/,/g, '');
-    if (number === '') return '';
-    return Number(number).toLocaleString();
-  };
 
   // Handle mint amount change - chỉ lưu raw value
   const handleMintAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,25 +99,6 @@ export const ConfidentialToken: React.FC = () => {
   const [contractSymbol, setContractSymbol] = useState('');
   const [contractDecimals, setContractDecimals] = useState('18'); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [initialSupply, setInitialSupply] = useState('');
-  
-  // Function to format number with commas
-  const formatNumberWithCommas = (value: string) => {
-    // Remove all commas first
-    const cleanValue = value.replace(/,/g, '');
-    
-    // If empty, return empty
-    if (cleanValue === '') return '';
-    
-    // If not a valid number, return the original value
-    if (isNaN(Number(cleanValue))) return value;
-    
-    // Convert to number and format with commas
-    const num = Number(cleanValue);
-    if (num < 0) return value; // Don't allow negative numbers
-    
-    // Simple formatting without toLocaleString to avoid Vercel issues
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
   
   // State for deployed contracts
   const [deployedContracts, setDeployedContracts] = useState<Array<{
