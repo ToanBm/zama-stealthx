@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import { useMyConfidentialToken } from '../hooks/useMyConfidentialToken';
 import { useTab } from '@/contexts/TabContext';
 import { useFhevmContext } from '@/contexts/FhevmContext';
+import { useToast } from '../hooks/useToast';
 import { getTokenABI, getTokenAddresses, getTokenInfo, getAllTokens } from '../abi/TokenRegistry';
 import { MyConfidentialTokenBytecode } from '../abi/bytecode/MyConfidentialTokenBytecode';
 import { Balance } from './Balance';
@@ -15,6 +16,7 @@ export const ConfidentialToken: React.FC = () => {
   const { address, isConnected } = useAccount();
   const { confidentialSubTab } = useTab();
   const { ethersReadonlyProvider, instance: fhevmInstance, ethersSigner } = useFhevmContext();
+  const { success, error: showError } = useToast();
 
   const {
     isLoading,
@@ -193,6 +195,7 @@ export const ConfidentialToken: React.FC = () => {
         
         // Combine both lists
         const allTokens = [...registryTokenOptions, ...deployedTokenOptions];
+        console.log('ConfidentialToken - Available tokens loaded:', allTokens.map(t => ({ symbol: t.symbol, icon: t.icon })));
         setAvailableTokens(allTokens);
       };
       
@@ -297,7 +300,7 @@ export const ConfidentialToken: React.FC = () => {
 
   const handleMint = async () => {
     if (!address || !mintAmount) {
-      alert('❌ Please connect wallet and fill in amount');
+      showError('❌ Please connect wallet and fill in amount');
       return;
     }
     
@@ -306,7 +309,7 @@ export const ConfidentialToken: React.FC = () => {
       const selectedTokenObj = availableTokens.find(t => t.symbol === selectedToken);
       
       if (!selectedTokenObj || !selectedTokenObj.isReal || !selectedTokenObj.address) {
-        alert('❌ Please select a real token contract');
+        showError('❌ Please select a real token contract');
         return;
       }
       
@@ -327,15 +330,15 @@ export const ConfidentialToken: React.FC = () => {
       const tx = await contract.mintConfidential(address, handle, proof);
       await tx.wait();
       
-      alert('✅ Mint successful!');
+      success('✅ Mint successful!');
     } catch (err) {
-      alert(`❌ Mint failed: ${err}`);
+      showError(`❌ Mint failed: ${err}`);
     }
   };
 
   const handleBurn = async () => {
     if (!address || !burnAmount) {
-      alert('❌ Please connect wallet and fill in amount');
+      showError('❌ Please connect wallet and fill in amount');
       return;
     }
     
@@ -345,7 +348,7 @@ export const ConfidentialToken: React.FC = () => {
       
       if (!selectedTokenObj || !selectedTokenObj.isReal || !selectedTokenObj.address) {
         // Mock tokens - không có contract thật
-        alert(`❌ ${selectedToken} is a mock token, no real contract available`);
+        showError(`❌ ${selectedToken} is a mock token, no real contract available`);
         return;
       }
       
@@ -366,9 +369,9 @@ export const ConfidentialToken: React.FC = () => {
       const tx = await contract.burnConfidential(address, handle, proof);
       await tx.wait();
       
-      alert('✅ Burn successful!');
+      success('✅ Burn successful!');
     } catch (err) {
-      alert(`❌ Burn failed: ${err}`);
+      showError(`❌ Burn failed: ${err}`);
     }
   };
 
@@ -379,7 +382,7 @@ export const ConfidentialToken: React.FC = () => {
       // Tìm contract address từ dropdown
       const selectedTokenObj = availableTokens.find(t => t.symbol === selectedToken);
       if (!selectedTokenObj || !selectedTokenObj.isReal || !selectedTokenObj.address) {
-        alert('❌ Please select a real token contract');
+        showError('❌ Please select a real token contract');
         return;
       }
       
@@ -407,9 +410,9 @@ export const ConfidentialToken: React.FC = () => {
       console.log('Batch Transfer tx:', tx);
       await tx.wait();
       
-      alert('✅ Transfer successful!');
+      success('✅ Transfer successful!');
     } catch (err) {
-      alert(`❌ Transfer failed: ${err}`);
+      showError(`❌ Transfer failed: ${err}`);
     }
   };
 
@@ -419,7 +422,7 @@ export const ConfidentialToken: React.FC = () => {
     const amounts = batchAmounts.split(',').map(amt => amt.trim()).filter(Boolean);
     
     if (recipients.length !== amounts.length) {
-      alert('❌ Recipients and amounts count must match');
+      showError('❌ Recipients and amounts count must match');
       return;
     }
 
@@ -428,9 +431,9 @@ export const ConfidentialToken: React.FC = () => {
       for (let i = 0; i < recipients.length; i++) {
         await burnConfidential(recipients[i], BigInt(amounts[i]));
       }
-      alert('✅ Batch burn successful!');
+      success('✅ Batch burn successful!');
     } catch (err) {
-      alert(`❌ Batch burn failed: ${err}`);
+      showError(`❌ Batch burn failed: ${err}`);
     }
   };
 
@@ -439,21 +442,21 @@ export const ConfidentialToken: React.FC = () => {
     const amounts = batchAmounts.split(',').map(amt => amt.trim()).filter(Boolean);
     
     if (recipients.length !== amounts.length) {
-      alert('❌ Recipients and amounts count must match');
+      showError('❌ Recipients and amounts count must match');
       return;
     }
 
     try {
       await batchTransferConfidential(recipients, amounts.map(amt => BigInt(amt)));
-      alert('✅ Batch transfer successful!');
+      success('✅ Batch transfer successful!');
     } catch (err) {
-      alert(`❌ Batch transfer failed: ${err}`);
+      showError(`❌ Batch transfer failed: ${err}`);
     }
   };
 
   const handleGetBalance = async () => {
     if (!balanceAccount) {
-      alert('❌ Please enter an account address');
+      showError('❌ Please enter an account address');
       return;
     }
 
@@ -463,27 +466,27 @@ export const ConfidentialToken: React.FC = () => {
       setHasBalance(!!balance);
       setDecryptedBalance(null);
     } catch (err) {
-      alert(`❌ Failed to get balance: ${err}`);
+      showError(`❌ Failed to get balance: ${err}`);
     }
   };
 
   const handleAllowDecrypt = async () => {
     if (!balanceAccount) {
-      alert('❌ Please enter an account address');
+      showError('❌ Please enter an account address');
       return;
     }
 
     try {
       await allowSelfBalanceDecrypt();
-      alert('✅ Decrypt permission granted');
+      success('✅ Decrypt permission granted');
     } catch (err) {
-      alert(`❌ Failed to allow decrypt: ${err}`);
+      showError(`❌ Failed to allow decrypt: ${err}`);
     }
   };
 
   const handleDecryptBalance = async () => {
     if (!confidentialBalance) {
-      alert('❌ No balance to decrypt');
+      showError('❌ No balance to decrypt');
       return;
     }
 
@@ -491,9 +494,9 @@ export const ConfidentialToken: React.FC = () => {
       // This would need to be implemented based on your FHEVM setup
       // For now, we'll just show a placeholder
       setDecryptedBalance('1000'); // Placeholder value
-      alert('✅ Balance decrypted successfully');
+      success('✅ Balance decrypted successfully');
     } catch (err) {
-      alert(`❌ Failed to decrypt balance: ${err}`);
+      showError(`❌ Failed to decrypt balance: ${err}`);
     }
   };
 
@@ -557,7 +560,12 @@ export const ConfidentialToken: React.FC = () => {
       setDeployedContracts(updatedContracts);
       saveDeployedContracts(updatedContracts);
       
-      alert(`✅ Contract deployed successfully!\n\nContract Address: ${contractAddress}\nName: ${contractName}\nSymbol: ${contractSymbol}\nDecimals: 18\nInitial Supply: ${initialSupply}\nOwner: ${deployerAddress}`);
+      // Dispatch custom event to notify Balance component
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('contractDeployed'));
+      }
+      
+      success(`✅ Contract deployed successfully!\n\nContract Address: ${contractAddress}\nName: ${contractName}\nSymbol: ${contractSymbol}\nDecimals: 18\nInitial Supply: ${initialSupply}\nOwner: ${deployerAddress}`);
       
       // Reset form
       setContractName('');
@@ -566,7 +574,7 @@ export const ConfidentialToken: React.FC = () => {
       
     } catch (err) {
       // Deploy error
-      alert(`❌ Deploy failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      showError(`❌ Deploy failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -644,7 +652,7 @@ export const ConfidentialToken: React.FC = () => {
                   >
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                        {availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('/') ? (
+                        {availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('/') || availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('http') ? (
                           <Image 
                             src={availableTokens.find(t => t.symbol === selectedToken)?.icon || '/usdc.svg'} 
                             alt={selectedToken}
@@ -652,8 +660,8 @@ export const ConfidentialToken: React.FC = () => {
                             height={24} 
                           />
                         ) : (
-                          <span className="text-white text-xs font-bold">
-                            {availableTokens.find(t => t.symbol === selectedToken)?.icon || '?'}
+                          <span className="text-lg">
+                            {availableTokens.find(t => t.symbol === selectedToken)?.icon || '🪙'}
                           </span>
                         )}
                       </div>
@@ -670,7 +678,7 @@ export const ConfidentialToken: React.FC = () => {
                   </button>
 
                   {isTokenDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto">
+                    <div className="absolute bottom-full left-0 mb-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-[9999] max-h-60 overflow-y-auto">
                       {availableTokens.map((token) => (
                         <button
                           key={token.symbol}
@@ -680,10 +688,10 @@ export const ConfidentialToken: React.FC = () => {
                           }`}
                         >
                           <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                            {token.icon?.startsWith('/') ? (
+                            {token.icon?.startsWith('/') || token.icon?.startsWith('http') ? (
                               <Image src={token.icon} alt={token.symbol} width={24} height={24} />
                             ) : (
-                              <span className="text-white text-xs font-bold">{token.icon}</span>
+                              <span className="text-lg">{token.icon}</span>
                             )}
                           </div>
                           <div>
@@ -744,7 +752,7 @@ export const ConfidentialToken: React.FC = () => {
                       >
                         <div className="flex items-center gap-2">
                           <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                            {availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('/') ? (
+                            {availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('/') || availableTokens.find(t => t.symbol === selectedToken)?.icon?.startsWith('http') ? (
                               <Image 
                                 src={availableTokens.find(t => t.symbol === selectedToken)?.icon || '/usdc.svg'} 
                                 alt={selectedToken}
@@ -752,8 +760,8 @@ export const ConfidentialToken: React.FC = () => {
                                 height={24} 
                               />
                             ) : (
-                              <span className="text-white text-xs font-bold">
-                                {availableTokens.find(t => t.symbol === selectedToken)?.icon || '?'}
+                              <span className="text-lg">
+                                {availableTokens.find(t => t.symbol === selectedToken)?.icon || '🪙'}
                               </span>
                             )}
                           </div>
@@ -770,7 +778,7 @@ export const ConfidentialToken: React.FC = () => {
                       </button>
 
                       {isTokenDropdownOpen && (
-                        <div className="absolute top-full left-0 mt-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto">
+                        <div className="absolute bottom-full left-0 mb-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-[9999] max-h-60 overflow-y-auto">
                           {availableTokens.map((token) => (
                             <button
                               key={token.symbol}
@@ -779,8 +787,12 @@ export const ConfidentialToken: React.FC = () => {
                                 selectedToken === token.symbol ? "bg-blue-50 text-blue-700" : "text-gray-700"
                               }`}
                             >
-                              <div className={`w-6 h-6 ${token.color} rounded-full flex items-center justify-center`}>
-                                <span className="text-white text-xs font-bold">{token.icon}</span>
+                              <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
+                                {token.icon?.startsWith('/') || token.icon?.startsWith('http') ? (
+                                  <Image src={token.icon} alt={token.symbol} width={24} height={24} />
+                                ) : (
+                                  <span className="text-lg">{token.icon}</span>
+                                )}
                               </div>
                               <div>
                                 <div className="font-medium">{token.symbol}</div>
@@ -863,7 +875,7 @@ export const ConfidentialToken: React.FC = () => {
                   </button>
 
                   {isTokenDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto">
+                    <div className="absolute bottom-full left-0 mb-1 w-[240%] bg-white border border-gray-300 rounded shadow-lg z-[9999] max-h-60 overflow-y-auto">
                       {availableTokens.map((token) => (
                         <button
                           key={token.symbol}
@@ -873,10 +885,10 @@ export const ConfidentialToken: React.FC = () => {
                           }`}
                         >
                           <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                            {token.icon?.startsWith('/') ? (
+                            {token.icon?.startsWith('/') || token.icon?.startsWith('http') ? (
                               <Image src={token.icon} alt={token.symbol} width={24} height={24} />
                             ) : (
-                              <span className="text-white text-xs font-bold">{token.icon}</span>
+                              <span className="text-lg">{token.icon}</span>
                             )}
                           </div>
                           <div>

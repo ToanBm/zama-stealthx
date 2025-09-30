@@ -38,32 +38,81 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
   const [isFetchingBalance, setIsFetchingBalance] = useState<boolean>(false);
   const [isDecryptAllowed, setIsDecryptAllowed] = useState<boolean>(false);
 
-  // Load tokens từ TokenRegistry
-  useEffect(() => {
-    const loadTokens = async () => {
-      // Load registry tokens (hardcoded)
-      const registryTokens = getAllTokens();
-      
-      const registryTokenOptions = await Promise.all(
-        registryTokens.map(async (token) => {
-          const addresses = await getTokenAddresses(token.symbol);
-          
-          return {
-            symbol: token.symbol,
-            name: token.name,
-            icon: token.icon,
-            color: token.color,
-            isReal: true,
-            address: addresses?.["11155111"]?.address,
-            decimals: token.decimals.toString(),
-          };
-        })
-      );
-      
-      setAvailableTokens(registryTokenOptions);
-    };
+  // Helper function to load all tokens (registry + deployed)
+  const loadAllTokens = async () => {
+    // Load registry tokens (hardcoded)
+    const registryTokens = getAllTokens();
     
-    loadTokens();
+    const registryTokenOptions = await Promise.all(
+      registryTokens.map(async (token) => {
+        const addresses = await getTokenAddresses(token.symbol);
+        
+        return {
+          symbol: token.symbol,
+          name: token.name,
+          icon: token.icon,
+          color: token.color,
+          isReal: true,
+          address: addresses?.["11155111"]?.address,
+          decimals: token.decimals.toString(),
+        };
+      })
+    );
+    
+    // Load deployed contracts từ localStorage
+    let deployedTokenOptions: typeof registryTokenOptions = [];
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('deployedContracts');
+        if (saved) {
+          const deployedContracts = JSON.parse(saved);
+            deployedTokenOptions = deployedContracts.map((contract: any) => ({
+              symbol: contract.symbol,
+              name: contract.name,
+              icon: '🪙', // Default icon for deployed tokens
+              color: '#8B5CF6', // Default color for deployed tokens
+              isReal: true,
+              address: contract.address,
+              decimals: contract.decimals,
+            }));
+        }
+      } catch (error) {
+        // Error loading deployed contracts
+        console.error('Error loading deployed contracts:', error);
+      }
+    }
+    
+    // Merge registry tokens với deployed tokens
+    const allTokens = [...registryTokenOptions, ...deployedTokenOptions];
+    console.log('Loading tokens:', { registry: registryTokenOptions.length, deployed: deployedTokenOptions.length, total: allTokens.length });
+    setAvailableTokens(allTokens);
+  };
+
+  // Load tokens từ TokenRegistry + deployed contracts từ localStorage
+  useEffect(() => {
+    loadAllTokens();
+  }, []);
+
+  // Listen for localStorage changes to reload tokens when new contracts are deployed
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'deployedContracts') {
+        loadAllTokens();
+      }
+    };
+
+    // Listen for custom event when contracts are deployed in same tab
+    const handleContractDeployed = () => {
+      loadAllTokens();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('contractDeployed', handleContractDeployed);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('contractDeployed', handleContractDeployed);
+    };
   }, []);
 
   // Close dropdown when clicking outside
@@ -230,12 +279,18 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
             >
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                  <Image 
-                    src={availableTokens.find(t => t.symbol === selectedBalanceToken)?.icon || '/usdc.svg'} 
-                    alt={selectedBalanceToken}
-                    width={24} 
-                    height={24} 
-                  />
+                  {availableTokens.find(t => t.symbol === selectedBalanceToken)?.icon?.startsWith('/') || availableTokens.find(t => t.symbol === selectedBalanceToken)?.icon?.startsWith('http') ? (
+                    <Image 
+                      src={availableTokens.find(t => t.symbol === selectedBalanceToken)?.icon || '/usdc.svg'} 
+                      alt={selectedBalanceToken}
+                      width={24} 
+                      height={24} 
+                    />
+                  ) : (
+                    <span className="text-lg">
+                      {availableTokens.find(t => t.symbol === selectedBalanceToken)?.icon || '🪙'}
+                    </span>
+                  )}
                 </div>
                 <span className="font-bold text-white">{selectedBalanceToken}</span>
               </div>
@@ -263,7 +318,11 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
                     }`}
                   >
                     <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
-                      <Image src={token.icon} alt={token.symbol} width={24} height={24} />
+                      {token.icon.startsWith('/') || token.icon.startsWith('http') ? (
+                        <Image src={token.icon} alt={token.symbol} width={24} height={24} />
+                      ) : (
+                        <span className="text-lg">{token.icon}</span>
+                      )}
                     </div>
                     <div>
                       <div className="font-medium">{token.symbol}</div>
