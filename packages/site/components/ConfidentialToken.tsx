@@ -30,7 +30,6 @@ export const ConfidentialToken: React.FC = () => {
 
   // Form states
   const [mintAmount, setMintAmount] = useState('');
-  const [displayMintAmount, setDisplayMintAmount] = useState('');
 
   // Format number with commas
   const formatNumber = (value: string) => {
@@ -39,36 +38,31 @@ export const ConfidentialToken: React.FC = () => {
     return Number(number).toLocaleString();
   };
 
-  // Handle mint amount change
+  // Handle mint amount change - chỉ lưu raw value
   const handleMintAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, '');
     if (value === '' || /^\d+$/.test(value)) {
-      setMintAmount(value);
-      setDisplayMintAmount(formatNumber(value));
+      setMintAmount(value); // chỉ lưu raw
     }
   };
   const [burnTo, setBurnTo] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [burnAmount, setBurnAmount] = useState('50');
-  const [displayBurnAmount, setDisplayBurnAmount] = useState('50');
+  const [burnAmount, setBurnAmount] = useState('');
 
-  // Handle burn amount change
+  // Handle burn amount change - chỉ lưu raw value
   const handleBurnAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, '');
     if (value === '' || /^\d+$/.test(value)) {
-      setBurnAmount(value);
-      setDisplayBurnAmount(formatNumber(value));
+      setBurnAmount(value); // chỉ lưu raw
     }
   };
   const [transferTo, setTransferTo] = useState('');
   const [transferAmount, setTransferAmount] = useState('50');
-  const [displayTransferAmount, setDisplayTransferAmount] = useState('50');
 
-  // Handle transfer amount change
+  // Handle transfer amount change - chỉ lưu raw value
   const handleTransferAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, '');
     if (value === '' || /^\d+$/.test(value)) {
-      setTransferAmount(value);
-      setDisplayTransferAmount(formatNumber(value));
+      setTransferAmount(value); // chỉ lưu raw
     }
   };
   const [faucetAmount, setFaucetAmount] = useState('1000'); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -731,7 +725,7 @@ export const ConfidentialToken: React.FC = () => {
                 <div className="w-[30%] text-right ml-auto">
                   <input
                     type="text"
-                    value={displayMintAmount}
+                    value={mintAmount}
                     onChange={handleMintAmountChange}
                     placeholder="0"
                     className={`w-full p-2 text-right font-bold text-white bg-transparent appearance-none border-none outline-none focus:outline-none text-base ${mintAmount === '' ? 'opacity-50' : ''}`}
@@ -832,7 +826,7 @@ export const ConfidentialToken: React.FC = () => {
                     <div className="w-[30%] text-right ml-auto">
                       <input
                         type="text"
-                        value={displayBurnAmount}
+                        value={burnAmount}
                         onChange={handleBurnAmountChange}
                         placeholder="0"
                         className={`w-full p-2 text-right font-bold text-white bg-transparent appearance-none border-none outline-none focus:outline-none text-base ${burnAmount === '' ? 'opacity-50' : ''}`}
@@ -1125,7 +1119,7 @@ export const ConfidentialToken: React.FC = () => {
                     <label className="block text-sm font-medium mb-1 text-white">Amount:</label>
                     <input
                       type="text"
-                      value={displayTransferAmount}
+                      value={transferAmount}
                       onChange={handleTransferAmountChange}
                       placeholder="0"
                       className={`w-full p-2 text-right font-bold text-white bg-transparent appearance-none border-none outline-none focus:outline-none text-base ${transferAmount === '' ? 'opacity-50' : ''}`}
@@ -1235,7 +1229,12 @@ export const ConfidentialToken: React.FC = () => {
                 <input
                   type="text"
                   value={initialSupply}
-                  onChange={(e) => setInitialSupply(formatNumberWithCommas(e.target.value))}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/,/g, '');
+                    if (value === '' || /^\d+$/.test(value)) {
+                      setInitialSupply(value);
+                    }
+                  }}
                   placeholder="Amount"
                   className="w-full p-2 font-bold text-white bg-tertiary border-none outline-none focus:outline-none rounded"
                 />
