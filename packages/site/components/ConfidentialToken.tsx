@@ -184,7 +184,7 @@ export const ConfidentialToken: React.FC = () => {
         const deployedTokenOptions = deployedTokens.map((contract: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
           symbol: contract.symbol,
           name: contract.name,
-          icon: '🪙', // Default icon for deployed tokens
+          icon: '/euro.svg', // Default icon for deployed tokens
           color: 'bg-purple-500', // Default color for deployed tokens
           isReal: true,
           address: contract.address,

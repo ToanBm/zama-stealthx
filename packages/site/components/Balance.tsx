@@ -66,10 +66,17 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
         const saved = localStorage.getItem('deployedContracts');
         if (saved) {
           const deployedContracts = JSON.parse(saved);
-            deployedTokenOptions = deployedContracts.map((contract: any) => ({
+            deployedTokenOptions = deployedContracts.map((contract: {
+              symbol: string;
+              name: string;
+              address: string;
+              decimals: string;
+              deployTime: string;
+              deployer: string;
+            }) => ({
               symbol: contract.symbol,
               name: contract.name,
-              icon: '🪙', // Default icon for deployed tokens
+              icon: '/euro.svg', // Default icon for deployed tokens
               color: '#8B5CF6', // Default color for deployed tokens
               isReal: true,
               address: contract.address,
