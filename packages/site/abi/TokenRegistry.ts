@@ -2,6 +2,14 @@
   Token Registry - Quản lý tất cả token contracts
 */
 
+// Import all ABIs and addresses directly
+import { MyConfidentialTokenzUSDABI } from './MyConfidentialToken-zUSDABI';
+import { MyConfidentialTokenzBTCABI } from './MyConfidentialToken-zBTCABI';
+import { MyConfidentialTokenzETHABI } from './MyConfidentialToken-zETHABI';
+import { MyConfidentialTokenzUSDAddresses } from './MyConfidentialToken-zUSDAddresses';
+import { MyConfidentialTokenzBTCAddresses } from './MyConfidentialToken-zBTCAddresses';
+import { MyConfidentialTokenzETHAddresses } from './MyConfidentialToken-zETHAddresses';
+
 export interface TokenInfo {
   symbol: string;
   name: string;
@@ -51,26 +59,37 @@ export const getAllTokens = (): TokenInfo[] => {
   return Object.values(TOKEN_REGISTRY);
 };
 
-// Dynamic import functions
-export const getTokenABI = async (symbol: string) => {
+// Static mapping for ABIs
+const ABI_MAP: Record<string, any> = {
+  'zUSD': MyConfidentialTokenzUSDABI,
+  'zBTC': MyConfidentialTokenzBTCABI,
+  'zETH': MyConfidentialTokenzETHABI,
+};
+
+// Static mapping for addresses
+const ADDRESSES_MAP: Record<string, any> = {
+  'zUSD': MyConfidentialTokenzUSDAddresses,
+  'zBTC': MyConfidentialTokenzBTCAddresses,
+  'zETH': MyConfidentialTokenzETHAddresses,
+};
+
+// Static functions
+export const getTokenABI = (symbol: string) => {
   const token = getTokenInfo(symbol);
   if (!token) {
     // Try to get ABI for deployed token (fallback to zUSD ABI)
-    const module = await import('./MyConfidentialToken-zUSDABI');
-    return module.MyConfidentialTokenzUSDABI;
+    return MyConfidentialTokenzUSDABI;
   }
   
-  const module = await import(token.abiPath);
-  return module[`MyConfidentialToken${symbol}ABI`];
+  return ABI_MAP[symbol] || MyConfidentialTokenzUSDABI;
 };
 
-export const getTokenAddresses = async (symbol: string) => {
+export const getTokenAddresses = (symbol: string) => {
   const token = getTokenInfo(symbol);
   if (!token) {
     // For deployed tokens, return null (address comes from localStorage)
     return null;
   }
   
-  const module = await import(token.addressesPath);
-  return module[`MyConfidentialToken${symbol}Addresses`];
+  return ADDRESSES_MAP[symbol] || null;
 };

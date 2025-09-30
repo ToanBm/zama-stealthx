@@ -242,7 +242,7 @@ export const ConfidentialToken: React.FC = () => {
     
     try {
       const addresses = await getTokenAddresses(selectedToken);
-      const MyConfidentialTokenABI = await getTokenABI(selectedToken);
+      const MyConfidentialTokenABI = getTokenABI(selectedToken);
       
       const tokenAddress = addresses?.["11155111"]?.address;
       if (!tokenAddress) return;
@@ -330,7 +330,7 @@ export const ConfidentialToken: React.FC = () => {
       }
       
       // Tạo contract instance với address từ dropdown
-      const MyConfidentialTokenABI = await getTokenABI(selectedTokenObj.symbol);
+      const MyConfidentialTokenABI = getTokenABI(selectedTokenObj.symbol);
       const contract = new ethers.Contract(
         selectedTokenObj.address,
         MyConfidentialTokenABI.abi,
@@ -369,7 +369,7 @@ export const ConfidentialToken: React.FC = () => {
       }
       
       // Tạo contract instance với address từ dropdown
-      const MyConfidentialTokenABI = await getTokenABI(selectedTokenObj.symbol);
+      const MyConfidentialTokenABI = getTokenABI(selectedTokenObj.symbol);
       const contract = new ethers.Contract(
         selectedTokenObj.address,
         MyConfidentialTokenABI.abi,
@@ -403,7 +403,7 @@ export const ConfidentialToken: React.FC = () => {
       }
       
       // Tạo contract instance với address từ dropdown
-      const MyConfidentialTokenABI = await getTokenABI(selectedTokenObj.symbol);
+      const MyConfidentialTokenABI = getTokenABI(selectedTokenObj.symbol);
       const contract = new ethers.Contract(
         selectedTokenObj.address,
         MyConfidentialTokenABI.abi,
@@ -533,7 +533,7 @@ export const ConfidentialToken: React.FC = () => {
     
     try {
       // Import MyConfidentialToken ABI (use zUSD as template)
-      const MyConfidentialTokenABI = await getTokenABI('zUSD');
+      const MyConfidentialTokenABI = getTokenABI('zUSD');
       
       // Get deployer address
       const deployerAddress = await ethersSigner.getAddress();

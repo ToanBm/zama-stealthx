@@ -38,13 +38,13 @@ async function getConfidentialTokenByChainId(
   tokenSymbol: string = 'zUSD'
 ): Promise<TokenInfoType> {
   if (!chainId) {
-    const tokenABI = await getTokenABI(tokenSymbol);
+    const tokenABI = getTokenABI(tokenSymbol);
     return { abi: tokenABI.abi };
   }
 
   try {
     const addresses = await getTokenAddresses(tokenSymbol);
-    const tokenABI = await getTokenABI(tokenSymbol);
+    const tokenABI = getTokenABI(tokenSymbol);
     const entry = addresses?.[chainId.toString()];
 
     if (!entry || !entry.address || entry.address === ethers.ZeroAddress) {
@@ -58,7 +58,7 @@ async function getConfidentialTokenByChainId(
       abi: tokenABI.abi,
     };
   } catch (error) {
-    const tokenABI = await getTokenABI(tokenSymbol);
+    const tokenABI = getTokenABI(tokenSymbol);
     return { abi: tokenABI.abi, chainId };
   }
 }

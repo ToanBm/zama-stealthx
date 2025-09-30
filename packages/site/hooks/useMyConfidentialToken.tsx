@@ -95,7 +95,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -139,7 +139,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -172,7 +172,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -216,7 +216,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI(tokenSymbol);
+      const tokenABI = getTokenABI(tokenSymbol);
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -249,7 +249,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -277,7 +277,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,
@@ -317,7 +317,7 @@ export const useMyConfidentialToken = (): ConfidentialTokenHook => {
         throw new Error('Contract address not found');
       }
       
-      const tokenABI = await getTokenABI('zUSD');
+      const tokenABI = getTokenABI('zUSD');
       const contract = new (await import('ethers')).Contract(
         contractAddress,
         tokenABI.abi,

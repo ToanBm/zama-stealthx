@@ -100,7 +100,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
       if (selectedToken && selectedToken.isReal && selectedToken.address) {
         // Real token từ deployed contract
         contractAddress = selectedToken.address;
-        const MyConfidentialTokenABI = await getTokenABI(selectedToken.symbol);
+        const MyConfidentialTokenABI = getTokenABI(selectedToken.symbol);
         abi = MyConfidentialTokenABI.abi;
       } else if (selectedBalanceToken === 'zUSD' || selectedBalanceToken === 'zBTC') {
         // Real token từ TokenRegistry
@@ -109,7 +109,7 @@ export const Balance: React.FC<BalanceProps> = ({ isLoading }) => {
         }
         const addresses = await getTokenAddresses(selectedToken.symbol);
         contractAddress = addresses?.["11155111"]?.address;
-        const MyConfidentialTokenABI = await getTokenABI(selectedToken.symbol);
+        const MyConfidentialTokenABI = getTokenABI(selectedToken.symbol);
         abi = MyConfidentialTokenABI.abi;
       } else {
         // Mock tokens - không có contract thật
